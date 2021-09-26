@@ -1,5 +1,7 @@
 package jm.task.core.jdbc.service;
 
+import jm.task.core.jdbc.dao.UserDao;
+import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
@@ -12,103 +14,33 @@ import java.util.*;
 
 public class UserServiceImpl implements UserService {
 
+    UserDao userDao = null;
 
-    public UserServiceImpl() throws SQLException, ClassNotFoundException {
+    public UserServiceImpl() {
+        userDao = new UserDaoJDBCImpl();
     }
 
-    public void createUsersTable() {
-        try (Connection conn = Util.getMySQLConnection()) {
-            String sql = "CREATE TABLE `dbtest`.`users`(`id` INT NOT NULL AUTO_INCREMENT, `name` VARCHAR(45) NULL, `lastName` VARCHAR(45) NULL, `age` INT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8 COLLATE = utf8_unicode_ci";
-            PreparedStatement cmd = conn.prepareStatement(sql);
-            cmd.executeUpdate();
-        } catch (SQLException throwables) {
-
-        }
-        catch (ClassNotFoundException e) {
-
-        }
+    public void createUsersTable() throws SQLException, ClassNotFoundException {
+        userDao.createUsersTable();
     }
 
-    public void dropUsersTable() {
-
-        try (Connection conn = Util.getMySQLConnection()){
-            String sql = "DROP TABLE `dbtest`.`users`";
-            PreparedStatement cmd = conn.prepareStatement(sql);
-            cmd.executeUpdate();
-        } catch (SQLException throwables) {
-
-        }
-        catch (ClassNotFoundException e) {
-
-        }
+    public void dropUsersTable() throws SQLException, ClassNotFoundException {
+        userDao.dropUsersTable();
     }
 
-    public void saveUser(String name, String lastName, byte age) {
-        try (Connection conn = Util.getMySQLConnection()) {
-            String sql = "INSERT INTO users (name, lastName, age) VALUES (?,?,?)";
-            PreparedStatement cmd = conn.prepareStatement(sql);
-            cmd.setString(1, name);
-            cmd.setString(2, lastName);
-            cmd.setByte(3, age);
-
-            if (cmd.executeUpdate() == 1) {
-                System.out.println("User с именем – " + name + " добавлен в базу данных.");
-            }
-
-        } catch (SQLException throwables) {
-
-        }
-        catch (ClassNotFoundException e) {
-
-        }
-
+    public void saveUser(String name, String lastName, byte age) throws SQLException, ClassNotFoundException {
+        userDao.saveUser(name, lastName, age);
     }
 
-    public void removeUserById(long id) {
-        try (Connection conn = Util.getMySQLConnection()) {
-            String sql = "DELETE FROM `users` WHERE id = " + id;
-            PreparedStatement cmd = conn.prepareStatement(sql);
-            cmd.executeUpdate();
-        } catch (SQLException throwables) {
-
-        }
-        catch (ClassNotFoundException e) {
-
-        }
+    public void removeUserById(long id) throws SQLException, ClassNotFoundException {
+        userDao.removeUserById(id);
     }
 
-    public List<User> getAllUsers() {
-            List<User> list = new ArrayList<>();
-        try (Connection conn = Util.getMySQLConnection()) {
-            String sql = "SELECT * FROM users";
-            PreparedStatement cmd = conn.prepareStatement(sql);
-            ResultSet result = cmd.executeQuery();
-
-            while (result.next()) {
-                String name = result.getString("name");
-                String lastName = result.getString("lastName");
-                byte age = result.getByte("age");
-                list.add(new User(name, lastName, age));
-            }
-        } catch (SQLException throwables) {
-
-        }
-        catch (ClassNotFoundException e) {
-
-        }
-        return list;
+    public List<User> getAllUsers() throws SQLException, ClassNotFoundException {
+        return userDao.getAllUsers();
     }
 
-    public void cleanUsersTable() {
-        try (Connection conn = Util.getMySQLConnection()) {
-            String sql = "TRUNCATE `dbtest`.`users`";
-            PreparedStatement cmd = conn.prepareStatement(sql);
-            cmd.executeUpdate();
-        } catch (SQLException throwables) {
-
-        }
-        catch (ClassNotFoundException e) {
-
-        }
+    public void cleanUsersTable() throws SQLException, ClassNotFoundException {
+        userDao.cleanUsersTable();
     }
 }
