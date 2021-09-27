@@ -1,21 +1,16 @@
 package jm.task.core.jdbc.dao;
 
-import jm.task.core.jdbc.HibernateUtil;
+import jm.task.core.jdbc.util.HibernateUtil;
 import jm.task.core.jdbc.model.User;
 
-import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 
-import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Root;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
